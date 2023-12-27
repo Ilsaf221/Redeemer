@@ -7,6 +7,7 @@ struct Hero
     int type;
     int hp = 5;
     int killed = 0;
+    int shield = false;
 };
 
 struct Enemy
@@ -14,7 +15,7 @@ struct Enemy
     sf::Texture texture;
     sf::Sprite sprite;
     int type;
-    int hp = 7;
+    int hp = 5;
     bool alive = true;
     bool move = true;
 };
@@ -49,5 +50,5 @@ void heroAttack(Hero &hero, Enemy &enemy, Bullet &bullet, sf::RenderWindow &wind
 void enemyReaction(Hero &hero, Enemy &enemy, float &frame, sf::RenderWindow &window, Arrow &arrow);
 void enemyAttack(Enemy &enemy, Hero &hero);
 void enemyMove(Enemy &enemy, float &frame, sf::Clock &clock);
-void enemyAnimation(Enemy &enemy, float &frame, sf::Clock &clock);
-void enemyAnimationStand(Enemy &enemy, float &frame, sf::Clock &clock);
+void enemyAnimation(Enemy &enemy, float &frame);
+void enemyAnimationStand(Enemy &enemy, float &frame);

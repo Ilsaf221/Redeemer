@@ -49,7 +49,7 @@ bool unitsCross(Hero &hero, Enemy &enemy)
     }
 }
 
-void enemyAnimationStand(Enemy &enemy, float &frame, sf::Clock &clock)
+void enemyAnimationStand(Enemy &enemy, float &frame)
 {
     if (enemy.alive == true)
     {
@@ -131,7 +131,14 @@ void enemySpearAttack(Enemy &enemy, Hero &hero)
         {
             hero.sprite.setPosition(heroPosition.x - 20, heroPosition.y);
         }
-        hero.hp -= 1;
+        if (hero.shield == false)
+        {
+            hero.hp -= 1;
+        }
+        else
+        {
+            hero.hp -= 0.3;
+        }
     }
 }
 
@@ -182,7 +189,7 @@ void yodaAbility(Hero &hero, Arrow &arrow)
     }
 }
 
-void grootAbility(Hero &hero)
+void grootAbility(Hero &hero, sf::RenderWindow &window)
 {
     const sf::Vector2f heroPosition = hero.sprite.getPosition();
 
@@ -203,8 +210,15 @@ void grootAbility(Hero &hero)
         }
         else
         {
-            shield.setPosition(heroPosition.x + 20, heroPosition.y);
+            shield.setPosition(heroPosition.x - 20, heroPosition.y);
         }
+
+        hero.shield = true;
+        window.draw(shield);
+    }
+    else
+    {
+        hero.shield = false;
     }
 }
 
@@ -222,8 +236,11 @@ void arrowState(Hero &hero, Enemy &enemy, Arrow &arrow)
 
         arrow.move = false;
         arrow.hit = true;
-        hero.sprite.setColor(sf::Color(217, 124, 121));
-        hero.hp -= 1;
+        if (hero.shield == false)
+        {
+            hero.sprite.setColor(sf::Color(217, 124, 121));
+            hero.hp -= 1;
+        }
     }
 
     if ((((arrowPosition.y >= enemyPosition.y - 0.16 * 255) &&
@@ -268,7 +285,7 @@ void enemyBowAttack(Enemy &enemy, Hero &hero, sf::RenderWindow &window, Arrow &a
     }
     else if (hero.type == 2)
     {
-        grootAbility(hero);
+        grootAbility(hero, window);
     }
 
     arrowState(hero, enemy, arrow);
@@ -316,53 +333,52 @@ void enemyReaction(Hero &hero, Enemy &enemy, float &frame, sf::RenderWindow &win
         enemy.move = true;
     }
 
-    if ((abs(motion.x <= 300) && abs(motion.y <= 300)) && (enemy.move == true))
+    sf::Vector2f direction;
+    if (enemy.hp <= 0)
     {
-        sf::Vector2f direction;
-        if (enemy.hp <= 0)
-        {
-            direction = {0, 0};
-            enemy.sprite.setColor(sf::Color(94, 93, 88));
-            enemy.sprite.setRotation(-90);
-            enemy.alive = false;
-            hero.killed += 1;
-        }
-        else
-        {
+        direction = {0, 0};
+        enemy.sprite.setColor(sf::Color(94, 93, 88));
+        enemy.sprite.setRotation(-90);
+        enemy.alive = false;
+    }
+    else
+    {
 
-            enemyAnimation(enemy, frame);
-            if (enemy.move == true)
+        enemyAnimation(enemy, frame);
+        if (enemy.move == true)
+        {
+            if (enemy.type == 1)
             {
-                if (enemy.type == 1)
+                if ((abs(motion.x <= 300) && abs(motion.y <= 300)) && (enemy.move == true))
                 {
                     direction = {motion.x / sqrt(pow(motion.x, 2) + pow(motion.y, 2)),
                                  motion.y / sqrt(pow(motion.x, 2) + pow(motion.y, 2))};
                     enemySpearAttack(enemy, hero);
                 }
-                else if (enemy.type == 2)
+            }
+            else if (enemy.type == 2)
+            {
+                if ((abs(motion.x) <= 150) && (abs(motion.y) <= 150))
                 {
-                    if ((abs(motion.x) <= 150) && (abs(motion.y) <= 150))
-                    {
-                        direction = {-motion.x / sqrt(pow(motion.x, 2) + pow(motion.y, 2)),
-                                     -motion.y / sqrt(pow(motion.x, 2) + pow(motion.y, 2))};
-                    }
-                    enemyBowAttack(enemy, hero, window, arrow);
+                    direction = {-motion.x / sqrt(pow(motion.x, 2) + pow(motion.y, 2)),
+                                 -motion.y / sqrt(pow(motion.x, 2) + pow(motion.y, 2))};
                 }
-            }
-
-            if (motion.x < 0)
-            {
-                enemy.sprite.setScale(-0.16, 0.16);
-            }
-            else
-            {
-                enemy.sprite.setScale(0.16, 0.16);
+                enemyBowAttack(enemy, hero, window, arrow);
             }
         }
 
-        enemyPosition = enemyPosition + direction * step;
-        enemy.sprite.setPosition(enemyPosition);
+        if (motion.x < 0)
+        {
+            enemy.sprite.setScale(-0.16, 0.16);
+        }
+        else
+        {
+            enemy.sprite.setScale(0.16, 0.16);
+        }
     }
+
+    enemyPosition = enemyPosition + direction * step;
+    enemy.sprite.setPosition(enemyPosition);
 }
 
 void initializebullet(Bullet &bullet, Hero &hero)
@@ -417,7 +433,6 @@ void bulletState(Hero &hero, Enemy &enemy, Bullet &bullet)
             if (enemy.hp <= 0)
             {
                 enemy.alive = false;
-                hero.killed += 1;
             }
             if (enemy.alive == true)
             {
@@ -639,7 +654,7 @@ void hpPanel(sf::RenderWindow &window, Hero &hero, bool &isGame, int &enemyNum)
         gameOverScene(window);
     }
 
-    if (hero.killed == enemyNum)
+    if (hero.killed >= enemyNum)
     {
         victoryScene(window);
     }

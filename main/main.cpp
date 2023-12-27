@@ -39,30 +39,22 @@ int main()
         sf::Style::Default, settings);
 
     Hero hero;
-    Enemy enemySpear1;
-    Enemy enemyBow1;
-    Enemy enemySpear2;
-    Enemy enemyBow2;
-    int enemyNum = 4;
+    Enemy enemySpear;
+    Enemy enemyBow;
+    int enemyNum = 2;
 
-    Arrow arrow1;
-    Arrow arrow2;
+    Arrow arrow;
     Bullet bullet;
 
-    hero.type = 2;
+    hero.type = 1;
     initializeHero(hero);
-    initializeEnemySpear(enemySpear1);
-    initializeEnemySpear(enemySpear2);
-    initializeEnemyBow(enemyBow1);
-    initializeEnemyBow(enemyBow2);
+    initializeEnemySpear(enemySpear);
+    initializeEnemyBow(enemyBow);
 
-    enemySpear1.sprite.setPosition(300, 300);
-    enemySpear2.sprite.setPosition(800, 800);
-    enemyBow1.sprite.setPosition(300, 800);
-    enemyBow2.sprite.setPosition(800, 300);
+    enemySpear.sprite.setPosition(300, 300);
+    enemyBow.sprite.setPosition(800, 300);
 
     sf::Clock clock;
-    sf::Clock clock2;
 
     bool isGame = true;
     float enemyFrame = 0;
@@ -74,28 +66,18 @@ int main()
         redrawFrame(window);
         if (isGame == true)
         {
-            move(hero, enemySpear1, heroFrame, clock);
-            move(hero, enemyBow1, heroFrame, clock);
-            move(hero, enemySpear2, heroFrame, clock);
-            move(hero, enemyBow2, heroFrame, clock);
-            enemyAnimationStand(enemySpear1, enemyStandFrame, clock2);
-            enemyAnimationStand(enemyBow1, enemyStandFrame, clock2);
-            enemyAnimationStand(enemySpear2, enemyStandFrame, clock2);
-            enemyAnimationStand(enemyBow2, enemyStandFrame, clock2);
-            enemyReaction(hero, enemySpear1, enemyFrame, window, arrow1);
-            enemyReaction(hero, enemyBow1, enemyFrame, window, arrow1);
-            enemyReaction(hero, enemySpear2, enemyFrame, window, arrow2);
-            enemyReaction(hero, enemyBow2, enemyFrame, window, arrow2);
-            heroAttack(hero, enemySpear1, bullet, window, clock);
-            heroAttack(hero, enemyBow1, bullet, window, clock);
-            heroAttack(hero, enemySpear2, bullet, window, clock);
-            heroAttack(hero, enemyBow2, bullet, window, clock);
+            move(hero, enemySpear, heroFrame, clock);
+            move(hero, enemyBow, heroFrame, clock);
+            enemyAnimationStand(enemySpear, enemyStandFrame);
+            enemyAnimationStand(enemyBow, enemyStandFrame);
+            enemyReaction(hero, enemySpear, enemyFrame, window, arrow);
+            enemyReaction(hero, enemyBow, enemyFrame, window, arrow);
+            heroAttack(hero, enemySpear, bullet, window, clock);
+            heroAttack(hero, enemyBow, bullet, window, clock);
         }
         pollEvents(window);
-        window.draw(enemySpear1.sprite);
-        window.draw(enemyBow1.sprite);
-        // window.draw(enemySpear2.sprite);
-        // window.draw(enemyBow2.sprite);
+        window.draw(enemySpear.sprite);
+        window.draw(enemyBow.sprite);
         window.draw(hero.sprite);
         hpPanel(window, hero, isGame, enemyNum);
         window.display();
