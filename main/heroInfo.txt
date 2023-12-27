@@ -1,0 +1,15 @@
+правый край без меча = 467
+центр героя = 295, 324.5
+центр врага = 255, 312  // (175, 169)
+правый край врага без копья = 154
+
+ if ((hero.getPosition().x + 172 == enemy.getPosition().x - 255) || (hero.getPosition().x - 295 == enemy.getPosition().x + 154))
+            {
+                heroPosition.x += step;
+                hero.setScale(0.15f, 0.15f);
+            }
+
+прямоугольник жизней = 168, 137, 93
+
+unitsCross:      if ((((heroPosition.y + 0.15 * 167.5 >= enemyPosition.y - 0.16 * 255) && (heroPosition.y - 0.15 * 167.5 <= enemyPosition.y + 0.16 * 255)) && ((heroPosition.x + 0.15 * 295 >= enemyPosition.x - 0.16 * 255) && (heroPosition.x - 0.15 * 295 <= enemyPosition.x + 0.16 * 255))) && (enemy.alive == true))
+

@@ -1,0 +1,15 @@
+    hero.texture.loadFromFile("images/heroesModels/animation/yodaAnimation.png");
+    hero.texture.loadFromFile("images/heroesModels/animation/spiderManAnimation.png");
+    hero.texture.loadFromFile("images/heroesModels/animation/grootAnimation.png");
+
+    hero.sprite.setOrigin(295, 324.5);
+    hero.sprite.setOrigin(236, 324.5);
+    hero.sprite.setOrigin(174, 324.5);
+
+    hero.sprite.setTextureRect(sf::IntRect(4 * 649, 0, 721, 649));
+    hero.sprite.setTextureRect(sf::IntRect(4 * 472, 0, 472, 649));
+    hero.sprite.setTextureRect(sf::IntRect(4 * 472, 0, 472, 708));
+    
+    hero.sprite.setTextureRect(sf::IntRect(649 * int(frame), 0, 649, 649));
+    hero.sprite.setTextureRect(sf::IntRect(472 * int(frame), 0, 472, 649));
+    hero.sprite.setTextureRect(sf::IntRect(472 * int(frame), 0, 472, 708));
